@@ -68,6 +68,10 @@ public class MidiConnector {
     public boolean ConnectToDevice(int i) throws MidiUnavailableException{
         dwm =new DeviceThatWillTransmitMidi(devices.get(i).getDeviceInfo()); 
         dwm.addParserListener(new MidiEventHandler());
+        dwm.startListening();
+        boolean bool=true;
+        while(bool);
+        dwm.stopListening();
         return true;
     }
 }
