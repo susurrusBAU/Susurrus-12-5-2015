@@ -16,6 +16,7 @@ import javax.sound.midi.MidiUnavailableException;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 ;
@@ -30,7 +31,9 @@ public class UI extends JFrame implements ActionListener{
     JButton ConnectToMidiButton=new JButton("Connect Device");
     JPanel panel1=new JPanel();
     String text="test";
+    MenuUI mui;
     public UI() throws MidiUnavailableException{
+        JOptionPane.showMessageDialog(null,"Please connect to your Midi Controller", "", JOptionPane.INFORMATION_MESSAGE);
         getContentPane().setLayout(new BorderLayout());
         panel1.setLayout(new FlowLayout(FlowLayout.RIGHT,20,20));
         getContentPane().add(panel1,BorderLayout.NORTH);
@@ -44,6 +47,7 @@ public class UI extends JFrame implements ActionListener{
         panel1.add(ConnectToMidiButton);
         ConnectToMidiButton.addActionListener(this);
         setSize(500,300);
+        this.setTitle("Midi Connector");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
@@ -57,9 +61,17 @@ public class UI extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==ConnectToMidiButton){
             try {
-                midcon.ConnectToDevice(combo.getSelectedIndex());
+                if(midcon.ConnectToDevice(combo.getSelectedIndex())){
+                    JOptionPane.showMessageDialog(null,"Connected to "+midcon.getMidiDeviceAt(combo.getSelectedIndex()), "", JOptionPane.INFORMATION_MESSAGE);
+                    mui=new MenuUI();
+                    this.setVisible(false);
+                }
+                else
+                    JOptionPane.showMessageDialog(null,"could not connect to "+midcon.getMidiDeviceAt(combo.getSelectedIndex()), "", JOptionPane.ERROR_MESSAGE);
+                
             } catch (MidiUnavailableException ex) {
                 Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
+                
             }
         }
     }
