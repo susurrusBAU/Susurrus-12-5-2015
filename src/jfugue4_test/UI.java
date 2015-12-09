@@ -62,9 +62,9 @@ public class UI extends JFrame implements ActionListener{
         if(e.getSource()==ConnectToMidiButton){
             try {
                 if(midcon.ConnectToDevice(combo.getSelectedIndex())){
-                    JOptionPane.showMessageDialog(null,"Connected to "+midcon.getMidiDeviceAt(combo.getSelectedIndex()), "", JOptionPane.INFORMATION_MESSAGE);
-                    mui=new MenuUI();
-                    this.setVisible(false);
+                    //JOptionPane.showMessageDialog(null,"Connected to "+midcon.getMidiDeviceAt(combo.getSelectedIndex()), "", JOptionPane.INFORMATION_MESSAGE);
+                    //mui=new MenuUI();
+                    //8this.setVisible(false);
                 }
                 else
                     JOptionPane.showMessageDialog(null,"could not connect to "+midcon.getMidiDeviceAt(combo.getSelectedIndex()), "", JOptionPane.ERROR_MESSAGE);

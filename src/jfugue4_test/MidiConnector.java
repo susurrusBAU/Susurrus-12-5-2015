@@ -7,6 +7,8 @@ package jfugue4_test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiMessage;
 import javax.sound.midi.MidiSystem;
@@ -68,10 +70,27 @@ public class MidiConnector {
     public boolean ConnectToDevice(int i) throws MidiUnavailableException{
         dwm =new DeviceThatWillTransmitMidi(devices.get(i).getDeviceInfo()); 
         dwm.addParserListener(new MidiEventHandler());
+        
+        MusicListenerThread mp=new MusicListenerThread();
+            Thread t=new Thread(mp);
+            t.start();
         return true;
     }
     
     public DeviceThatWillTransmitMidi getConnectedDevice(){
         return dwm;
+    }
+    
+    public class MusicListenerThread implements Runnable{
+
+        @Override
+        public void run() {
+            try {
+                dwm.listenForMillis(10000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(MidiConnector.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
     }
 }

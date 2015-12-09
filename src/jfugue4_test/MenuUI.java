@@ -46,4 +46,8 @@ public class MenuUI extends JFrame implements ActionListener{
         }
     }
     
+    public MenuUI getThis(){
+        return this;
+    }
+    
 }

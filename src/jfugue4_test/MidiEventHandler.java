@@ -42,13 +42,13 @@ public class MidiEventHandler  extends ParserListenerAdapter{
 
         public List<org.jfugue.Instrument> getInstrumentsUsed(Pattern pattern)
         {
-        MusicStringParser parser = new MusicStringParser();
-        parser.addParserListener(this);
-        parser.parse(pattern);
-        return instruments;
+            MusicStringParser parser = new MusicStringParser();
+            parser.addParserListener(this);
+            parser.parse(pattern);
+            return instruments;
         } 
         
-        public class MusicPlayerThread implements Runnable{
+        public class MusicPlayerThread implements Runnable{//to analyze the notes without interupting the flow of the main screen
         private Note note;
         
         public MusicPlayerThread(Note n){
@@ -61,7 +61,22 @@ public class MidiEventHandler  extends ParserListenerAdapter{
             Pattern ptr=new Pattern();
             note.setDecimalDuration(0.3);
             ptr.add(note.getMusicString());
-                System.out.println(note.getMusicString());
+            String toEval=note.getMusicString();
+            if(toEval.charAt(0)=='C')
+                System.out.println("one of the C's");
+            else if(toEval.charAt(0)=='D'){
+                System.out.println("one of the D's");
+            }else if(toEval.charAt(0)=='E'){
+                System.out.println("one of the E's");
+            }else if(toEval.charAt(0)=='F'){
+                System.out.println("one of the F's");
+            }else if(toEval.charAt(0)=='G'){
+                System.out.println("one of the G's");
+            }else if(toEval.charAt(0)=='A'){
+                System.out.println("one of the A's");
+            }else if(toEval.charAt(0)=='B'){
+                System.out.println("one of the B's");
+            }
             p.play(ptr);
             }
         }

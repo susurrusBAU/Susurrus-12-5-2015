@@ -6,7 +6,9 @@
 package jfugue4_test;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Graphics2D;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -50,10 +52,14 @@ import org.jfugue.Voice;
 public class Jfugue4_test extends JFrame{
     private ArrayList<MidiDevice> devices = new ArrayList<MidiDevice>();
     public JTextArea jta=new JTextArea();
+    private Graphics2D g;
+    
+    
     public Jfugue4_test() throws MidiUnavailableException, InterruptedException, FileNotFoundException, IOException{
+        
         getContentPane().setLayout(new BorderLayout());
-        getContentPane().add(new JScrollPane(jta),BorderLayout.CENTER);
-        setSize(500,300);
+        //getContentPane().add(new JScrollPane(jta),BorderLayout.CENTER);
+        setSize(800,500);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
         MidiDevice device;
@@ -95,6 +101,7 @@ public class Jfugue4_test extends JFrame{
         //dwm.listenForMillis(10000); 
         dwm.addParserListener(new GetInstrumentsUsedTool());
         
+        DoStuff();
         dwm.startListening();
         
         //Pattern ptrn=dwm.getPatternFromListening();
@@ -134,6 +141,73 @@ public class Jfugue4_test extends JFrame{
             System.out.println("midi received");
         }
         public void close() {}
+    }
+    int NoteCounter=1;
+    
+    public void ClearSheet(){
+        g=(Graphics2D ) getGraphics ();
+        g.setColor(Color.white);
+        g.fillRect(0,0,900,900);
+        NoteCounter=1;
+        DoStuff();
+    }
+    public void DoStuff(){
+        System.out.println("done stuff");
+        g=(Graphics2D ) getGraphics ();
+        g.setColor(Color.white);
+        g.fillRect(0,0,900,900);
+        g.setColor(Color.black);
+        g.drawLine(0,50,800,50);
+        g.drawLine(0,75,800,75);
+        g.drawLine(0,100,800,100);
+        g.drawLine(0,125,800,125);
+        g.drawLine(0,150,800,150);
+        
+        g.drawLine(95, 0, 95, 200);
+        g.drawLine(175, 0, 175, 200);
+        g.drawLine(255, 0, 255, 200);
+        g.drawLine(335, 0, 335, 200);
+        g.drawLine(415, 0, 415, 200);
+        g.drawLine(495, 0, 495, 200);
+        g.drawLine(575, 0, 575, 200);
+        g.drawLine(655, 0, 655, 200);
+        g.drawLine(735, 0, 735, 200);
+        //g.drawRect(100,100,200,200);
+    }
+    
+    public void DrawNotes(char note,char pos){
+        g=(Graphics2D ) getGraphics ();
+        g.setColor(Color.black);
+        if(note=='C' && pos=='4'){
+            g.fillOval(NoteCounter*20,175,10,10);
+            g.drawLine(NoteCounter*20-5, 180, NoteCounter*20+15, 180);
+        }
+        else if(note=='D'&& pos=='4')
+            g.fillOval(NoteCounter*20,160,10,10);
+        else if(note=='E'&& pos=='4')
+            g.fillOval(NoteCounter*20,145,10,10);
+        else if(note=='F'&& pos=='4')
+            g.fillOval(NoteCounter*20,135,10,10);
+        else if(note=='G'&& pos=='4')
+            g.fillOval(NoteCounter*20,120,10,10);
+        else if(note=='A'&& pos=='4')
+            g.fillOval(NoteCounter*20,105,10,10);
+        else if(note=='B'&& pos=='4')
+            g.fillOval(NoteCounter*20,95,10,10);
+        
+//        if(note=='C' && pos=='5')
+//            g.fillOval(NoteCounter*20,175,10,10);
+//        else if(note=='D'&& pos=='5')
+//            g.fillOval(NoteCounter*20,160,10,10);
+//        else if(note=='E'&& pos=='5')
+//            g.fillOval(NoteCounter*20,145,10,10);
+//        else if(note=='F'&& pos=='5')
+//            g.fillOval(NoteCounter*20,135,10,10);
+//        else if(note=='G'&& pos=='5')
+//            g.fillOval(NoteCounter*20,120,10,10);
+        NoteCounter++;
+        if(NoteCounter==39)
+            ClearSheet();
     }
     
     public class NoteDetect implements ParserListener{
@@ -235,7 +309,10 @@ public class Jfugue4_test extends JFrame{
 //            //p.play(note.getMusicString());
 //            }
 //            counter++;
-            
+            char NoteType=note.getMusicString().charAt(0);
+            char NotePos=note.getMusicString().charAt(1);
+            if(note.getDuration()==0.0)
+                DrawNotes(NoteType,NotePos);
             MusicPlayerThread mp=new MusicPlayerThread(note);
             Thread t=new Thread(mp);
             t.start();
