@@ -175,13 +175,13 @@ public class LessonTest extends JFrame{
         
         
         g.setColor(Color.black);
-        g.fillOval(1*20,175,10,10);
+        g.fillOval(1*20,175,10,10);//C4
         g.drawLine(1*20-5, 180, NoteCounter*20+15, 180);
         //************************//
-        g.fillOval(2*20,175,10,10);
+        g.fillOval(2*20,175,10,10);//C4
         g.drawLine(2*20-5, 180, NoteCounter*20+15, 180);
         //************************//
-        g.fillOval(3*20,120,10,10);
+        g.fillOval(3*20,120,10,10);//G4
         //************************//
         g.fillOval(4*20,120,10,10);
         //************************//
