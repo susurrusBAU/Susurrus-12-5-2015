@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package jfugue4_test;
+package jfugue4_test.Interface;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -19,6 +19,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import jfugue4_test.MidiConnector;
 ;
 
 /**

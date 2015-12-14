@@ -9,12 +9,16 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.sound.midi.Instrument;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiMessage;
@@ -24,7 +28,9 @@ import javax.sound.midi.Receiver;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.Track;
 import javax.sound.midi.Transmitter;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import org.jfugue.ChannelPressure;
@@ -49,15 +55,18 @@ import org.jfugue.Voice;
  *
  * @author P
  */
-public class Jfugue4_test extends JFrame{
+public class FreeMode extends JFrame{
     private ArrayList<MidiDevice> devices = new ArrayList<MidiDevice>();
     public JTextArea jta=new JTextArea();
     private Graphics2D g;
+    private JPanel panel1=new JPanel();
+    private JButton Saveb=new JButton("Save");
     
-    
-    public Jfugue4_test() throws MidiUnavailableException, InterruptedException, FileNotFoundException, IOException{
+    public FreeMode() throws MidiUnavailableException, InterruptedException, FileNotFoundException, IOException{
         
         getContentPane().setLayout(new BorderLayout());
+        getContentPane().add(panel1,BorderLayout.SOUTH);
+        panel1.add(Saveb);
         //getContentPane().add(new JScrollPane(jta),BorderLayout.CENTER);
         setSize(800,500);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -129,7 +138,7 @@ public class Jfugue4_test extends JFrame{
     }
     public static void main(String[] args) throws MidiUnavailableException, InterruptedException, IOException {
         // TODO code application logic here
-        Jfugue4_test j=new Jfugue4_test();
+        FreeMode j=new FreeMode();
     }
     
     public class MidiInputReceiver implements Receiver {
@@ -175,9 +184,12 @@ public class Jfugue4_test extends JFrame{
         //g.drawRect(100,100,200,200);
     }
     
-    public void DrawNotes(char note,char pos){
+    public void DrawNotes(char note,char pos) throws IOException{
         g=(Graphics2D ) getGraphics ();
         g.setColor(Color.black);
+        BufferedImage image = new BufferedImage(50, 50, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics2D = image.createGraphics();
+        ImageIO.write(image,"jpeg", new File("C:\\Users\\P\\Desktop\\jmemPractice.jpeg"));
         if(note=='C' && pos=='4'){
             g.fillOval(NoteCounter*20,175,10,10);
             g.drawLine(NoteCounter*20-5, 180, NoteCounter*20+15, 180);
@@ -195,6 +207,8 @@ public class Jfugue4_test extends JFrame{
         else if(note=='B'&& pos=='4')
             g.fillOval(NoteCounter*20,95,10,10);
         
+        
+        
 //        if(note=='C' && pos=='5')
 //            g.fillOval(NoteCounter*20,175,10,10);
 //        else if(note=='D'&& pos=='5')
@@ -206,8 +220,14 @@ public class Jfugue4_test extends JFrame{
 //        else if(note=='G'&& pos=='5')
 //            g.fillOval(NoteCounter*20,120,10,10);
         NoteCounter++;
-        if(NoteCounter==39)
-            ClearSheet();
+        if(NoteCounter==10){
+            savePic();
+            this.ClearSheet();
+        }
+    }
+    
+    public void savePic() throws IOException{
+        
     }
     
     public class NoteDetect implements ParserListener{
@@ -312,7 +332,11 @@ public class Jfugue4_test extends JFrame{
             char NoteType=note.getMusicString().charAt(0);
             char NotePos=note.getMusicString().charAt(1);
             if(note.getDuration()==0.0)
-                DrawNotes(NoteType,NotePos);
+                try {
+                    DrawNotes(NoteType,NotePos);
+            } catch (IOException ex) {
+                Logger.getLogger(FreeMode.class.getName()).log(Level.SEVERE, null, ex);
+            }
             MusicPlayerThread mp=new MusicPlayerThread(note);
             Thread t=new Thread(mp);
             t.start();
@@ -352,5 +376,13 @@ public class Jfugue4_test extends JFrame{
             }
         }
         
+    }
+    
+    public class SaveFrame extends JPanel{
+        public SaveFrame() throws IOException{
+            BufferedImage image = new BufferedImage(400, 400, BufferedImage.TYPE_INT_RGB);
+            Graphics2D graphics2D = image.createGraphics();
+            ImageIO.write(image,"jpeg", new File("C:\\Users\\P\\Desktop\\jmemPractice.jpeg"));
+        }
     }
 }
